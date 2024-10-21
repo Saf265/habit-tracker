@@ -1,7 +1,9 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -12,6 +14,7 @@ const navItems = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { user } = useUser();
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 px-2 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -41,14 +44,21 @@ export default function Navbar() {
           <div className="w-full flex-1 md:w-auto md:flex-none">
             {/* Add search functionality if needed */}
           </div>
-          <nav className="flex items-center">
-            <Button variant="ghost" asChild className="mr-2">
-              <Link href="/login">Log in</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/signup">Sign up</Link>
-            </Button>
-          </nav>
+          {user?.imageUrl ? (
+            <Avatar>
+              <AvatarImage src={user?.imageUrl} />
+              <AvatarFallback>USER</AvatarFallback>
+            </Avatar>
+          ) : (
+            <nav className="flex items-center">
+              <Button variant="ghost" asChild className="mr-2">
+                <Link href="/sign-in">Log in</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/sign-up">Sign up</Link>
+              </Button>
+            </nav>
+          )}
         </div>
       </div>
     </nav>

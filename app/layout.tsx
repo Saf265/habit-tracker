@@ -1,21 +1,15 @@
 import { cn } from "@/lib/utils";
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Footer from "./landing/Footer";
-import Navbar from "./landing/Navbar";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
 });
-
-// const poppins = Poppins({
-//   subsets: ["latin"],
-//   display: "swap",
-//   weight: ["400"]
-// })
 
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
@@ -34,16 +28,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={cn(
-          `${geistSans.variable} ${geistMono.variable} antialiased text-foreground bg-background h-full`
-        )}
-      >
-        <Navbar />
-        {children}
-        <Footer />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={cn(
+            `${geistSans.variable} ${geistMono.variable} antialiased text-foreground bg-background min-h-[100vh] w-full h-full`
+          )}
+        >
+          {children}
+          <Toaster />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
