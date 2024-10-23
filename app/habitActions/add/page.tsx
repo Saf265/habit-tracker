@@ -1,5 +1,6 @@
 "use client";
 
+import { successCreate } from "@/components/asset_app/ToastAsset";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -64,6 +65,7 @@ export default function CreateHabitForm() {
             <form
               onSubmit={(e) => CreateHabit(new FormData(e.currentTarget))}
               className="w-full space-y-8"
+              action={successCreate}
             >
               <div className="grid w-full items-center gap-1.5">
                 <Label htmlFor="habitName">Name of habit</Label>

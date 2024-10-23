@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { updateHabit } from "@/lib/actionHabit";
 import { useState } from "react";
+import { successEdit } from "./ToastAsset";
 
 type HabitDetails = {
   id: number;
@@ -41,7 +42,11 @@ export default function UpdateHabitForm({
   ];
 
   return (
-    <form action={updateHabit} className="w-full space-y-8">
+    <form
+      action={updateHabit}
+      onSubmit={successEdit}
+      className="w-full space-y-8"
+    >
       <input type="hidden" name="id" value={id} />
       <div className="grid w-full items-center gap-1.5">
         <Label htmlFor="habitName">Name of habit</Label>

@@ -8,9 +8,23 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { deleteHabit } from "@/lib/actionHabit";
 import { ChevronDown, ChevronUp, Trash2 } from "lucide-react";
 import * as React from "react";
 import BtnEdit from "./BtnEdit";
+import { successDelete } from "./ToastAsset";
 
 type HabitProps = {
   id: number;
@@ -60,11 +74,6 @@ export default function HabitsLayout({
     }
   };
 
-  const deleteHabit = (id: number) => {
-    // Logique pour supprimer une habitude
-    console.log(`Supprimer l'habitude ${id}`);
-  };
-
   return (
     <Collapsible
       key={id}
@@ -105,15 +114,47 @@ export default function HabitsLayout({
             <p className="mb-2 text-sm">Fréquence : {frequency}</p>
             <p className="mb-4 text-sm">Série actuelle : {streak} jours</p>
             <div className="flex items-center justify-between">
-              <div>
+              <div className="flex items-center gap-1">
                 <BtnEdit id={id} />
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => deleteHabit(id)}
-                >
-                  <Trash2 className="mr-1 size-4" /> Supprimer
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="destructive">
+                      <Trash2 color="white" /> Remove
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Remove your habit</DialogTitle>
+                      <DialogDescription></DialogDescription>
+                    </DialogHeader>
+                    <form
+                      action={successDelete}
+                      onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+                        event.preventDefault();
+                        deleteHabit(new FormData(event.currentTarget));
+                      }}
+                      className="flex flex-col space-y-5"
+                    >
+                      <input type="hidden" name="id" value={id} />
+                      <div className="flex flex-col items-start gap-1.5">
+                        <Label htmlFor="valueName" className="text-right">
+                          Type <strong>{name}</strong> to remove it
+                        </Label>
+                        <Input
+                          id="valueName"
+                          name="valueName"
+                          className="col-span-3"
+                          required
+                        />
+                      </div>
+                      <DialogFooter>
+                        <DialogClose asChild>
+                          <Button type="submit">Confirm</Button>
+                        </DialogClose>
+                      </DialogFooter>
+                    </form>
+                  </DialogContent>
+                </Dialog>
               </div>
               <p className="text-sm text-muted-foreground">
                 {lastCompleted

@@ -84,29 +84,7 @@ export const updateHabit = async (formData: FormData) => {
   const reminder = formData.has("reminder");
   const id = formData.get("id");
 
-  // Récupération des jours de la semaine
   const dailyGoal = formData.getAll("dailyGoal");
-  // .map((day) => {
-  //   switch (day) {
-  //     case "Monday":
-  //       return 0;
-  //     case "Tuesday":
-  //       return 1;
-  //     case "Wednesday":
-  //       return 2;
-  //     case "Thursday":
-  //       return 3;
-  //     case "Friday":
-  //       return 4;
-  //     case "Saturday":
-  //       return 5;
-  //     case "Sunday":
-  //       return 6;
-  //     default:
-  //       return NaN; // Valeur par défaut si le jour n'est pas reconnu
-  //   }
-  // })
-  // .filter((day) => !isNaN(day)); // Filtrer les NaN
 
   console.log(habitName);
   console.log(habitDescription);
@@ -131,5 +109,25 @@ export const updateHabit = async (formData: FormData) => {
     },
   });
 
-  // redirect("/dashboard/my-habits");
+  redirect("/dashboard/my-habits");
+};
+
+export const deleteHabit = async (formData: FormData) => {
+  const id = formData.get("id");
+  const valueName = formData.get("valueName");
+
+  console.log(id);
+  console.log(valueName);
+
+  const habitData = await getHabitDataById(Number(id));
+
+  if (habitData?.name === valueName) {
+    await prisma.habit.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+  } else {
+    return null;
+  }
 };
