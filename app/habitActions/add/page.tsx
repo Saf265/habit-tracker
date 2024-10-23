@@ -25,7 +25,7 @@ import { CreateHabit } from "@/lib/actionHabit";
 import { useState } from "react";
 
 export default function CreateHabitForm() {
-  const [frequencyValue, setFrequency] = useState("daily");
+  const [frequencyValue, setFrequency] = useState("DAILY");
 
   const habitList = [
     { name: "Mon", value: "Monday" },

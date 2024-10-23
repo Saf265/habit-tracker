@@ -8,8 +8,9 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronUp, Edit, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Trash2 } from "lucide-react";
 import * as React from "react";
+import BtnEdit from "./BtnEdit";
 
 type HabitProps = {
   id: number;
@@ -59,11 +60,6 @@ export default function HabitsLayout({
     }
   };
 
-  const editHabit = (id: number) => {
-    // Logique pour éditer une habitude
-    console.log(`Éditer l'habitude ${id}`);
-  };
-
   const deleteHabit = (id: number) => {
     // Logique pour supprimer une habitude
     console.log(`Supprimer l'habitude ${id}`);
@@ -110,14 +106,7 @@ export default function HabitsLayout({
             <p className="mb-4 text-sm">Série actuelle : {streak} jours</p>
             <div className="flex items-center justify-between">
               <div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="mr-2"
-                  onClick={() => editHabit(id)}
-                >
-                  <Edit className="mr-1 size-4" /> Éditer
-                </Button>
+                <BtnEdit id={id} />
                 <Button
                   variant="outline"
                   size="sm"
