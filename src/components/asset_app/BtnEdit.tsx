@@ -10,10 +10,9 @@ type EditProps = {
 
 export default function BtnEdit({ id }: EditProps) {
   return (
-    <div>
       <Link
         href={{
-          pathname: `/habitActions/edit/${id}`,
+          pathname: `/habitActions/edit`,
           query: {
             id: id,
           },
@@ -23,7 +22,5 @@ export default function BtnEdit({ id }: EditProps) {
           <Edit className="mr-1 size-4" /> Edit, id: {id}
         </Button>
       </Link>
-      <input type="hidden" value={id} />
-    </div>
   );
 }
