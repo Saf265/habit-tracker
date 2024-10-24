@@ -9,6 +9,7 @@ export async function POST() {
 
     // 2. Créer une nouvelle entrée dans HistoryHabit pour chaque habitude
     const historyData = habits.map((habit) => ({
+      userId: habit.userId,
       habitId: habit.id,
       completed: habit.completed,
     }));

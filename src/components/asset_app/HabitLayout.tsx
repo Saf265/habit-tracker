@@ -124,7 +124,7 @@ export default function HabitsLayout({
                   }}
                 >
                   <Button variant="outline" size="sm" className="mr-2">
-                    <Edit className="mr-1 size-4" /> Edit 2, id: {Number(id)}
+                    <Edit className="mr-1 size-4" /> Edit
                   </Button>
                 </Link>
                 <Dialog>

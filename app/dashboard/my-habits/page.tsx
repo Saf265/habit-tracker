@@ -36,6 +36,7 @@ export default async function HabitPage() {
       habitType: "WEEKLY",
     },
   });
+
   return (
     <div>
       <div className="flex w-full flex-col">
