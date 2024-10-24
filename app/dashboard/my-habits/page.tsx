@@ -25,15 +25,13 @@ export default async function HabitPage() {
 
   const allUserHabitDaily = await prisma.habit.findMany({
     where: {
-      userId: userDb?.id,
-      habitType: "DAILY",
+      AND: [{ userId: userDb?.id }, { habitType: "DAILY" }],
     },
   });
 
   const allUserHabitWeekly = await prisma.habit.findMany({
     where: {
-      userId: userDb?.id,
-      habitType: "WEEKLY",
+      AND: [{ userId: userDb?.id }, { habitType: "WEEKLY" }],
     },
   });
 

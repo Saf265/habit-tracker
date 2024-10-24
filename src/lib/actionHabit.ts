@@ -91,6 +91,10 @@ export const updateHabit = async (formData: FormData) => {
   const reminder = formData.has("reminder");
   const id = Number(formData.get("id"));
 
+  if (!id || isNaN(Number(id))) {
+    throw new Error("Invalid or missing habit ID.");
+  }
+
   const dailyGoal = formData.getAll("dailyGoal");
 
   console.log(habitName);
@@ -123,24 +127,27 @@ export const deleteHabit = async (formData: FormData) => {
   const id = formData.get("id");
   const valueName = formData.get("valueName");
 
-  console.log(id);
-  console.log(valueName);
+  if (!id || isNaN(Number(id))) {
+    throw new Error("Invalid or missing habit ID.");
+  }
+
+  if (!valueName || typeof valueName !== "string") {
+    throw new Error("Invalid or missing habit name.");
+  }
 
   const habitData = await getHabitDataById(Number(id));
 
   if (habitData?.name === valueName) {
-    await prisma.habit.delete({
-      where: {
-        id: Number(id),
-      },
-    });
-
-    await prisma.historyHabit.deleteMany({
-      where: {
-        habitId: Number(id),
-      },
-    });
+    // Supprimer l'habitude et son historique dans une transaction
+    await prisma.$transaction([
+      prisma.habit.delete({
+        where: { id: Number(id) },
+      }),
+      prisma.historyHabit.deleteMany({
+        where: { habitId: Number(id) },
+      }),
+    ]);
   } else {
-    return null;
+    throw new Error("Habit not found or name does not match.");
   }
 };

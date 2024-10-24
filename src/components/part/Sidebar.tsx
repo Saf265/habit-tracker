@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { SignOutButton } from "@clerk/nextjs";
 import { BarChart2, Home, LogOut, Menu, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -56,12 +57,18 @@ export default function Sidebar() {
             </ScrollArea>
           </div>
           <div className="mt-auto p-6">
-            <Button variant="outline" className="w-full justify-start" asChild>
-              <Link href="/logout">
-                <LogOut className="mr-2 size-4" />
-                Déconnexion
-              </Link>
-            </Button>
+            <SignOutButton>
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                asChild
+              >
+                <Link href="/logout">
+                  <LogOut className="mr-2 size-4" />
+                  Déconnexion
+                </Link>
+              </Button>
+            </SignOutButton>
           </div>
         </div>
       </div>
