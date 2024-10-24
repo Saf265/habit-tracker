@@ -20,10 +20,12 @@ export default async function UpdateHabitFormPage({
 }: {
   searchParams: { id: number };
 }) {
-  const habitData = await getHabitDataById(Number(searchParams?.id));
+  const habitData = await getHabitDataById(Number(searchParams.id));
+
   if (!habitData) {
     return null;
   }
+
   return (
     <section className="flex size-full min-h-[90vh] flex-1 flex-col items-center justify-center space-y-6 p-2">
       <div className="flex w-full max-w-2xl flex-col gap-2">
@@ -49,7 +51,7 @@ export default async function UpdateHabitFormPage({
           </CardHeader>
           <CardContent>
             <UpdateHabitForm
-              id={habitData?.id}
+              id={Number(searchParams.id)}
               name={habitData?.name}
               description={habitData?.description ?? ""}
               reminder={habitData?.reminder}

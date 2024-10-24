@@ -82,7 +82,7 @@ export const updateHabit = async (formData: FormData) => {
   const frequency = formData.get("frequency") as string;
   const weeklyGoal = frequency === "WEEKLY" ? formData.get("weeklyGoal") : null;
   const reminder = formData.has("reminder");
-  const id = formData.get("id");
+  const id = Number(formData.get("id"));
 
   const dailyGoal = formData.getAll("dailyGoal");
 
@@ -92,11 +92,11 @@ export const updateHabit = async (formData: FormData) => {
   console.log(dailyGoal);
   console.log(weeklyGoal);
   console.log(reminder);
-  console.log(id);
+  console.log(id + " is id" + "typeof " + typeof id);
 
   await prisma.habit.update({
     where: {
-      id: Number(id),
+      id: id,
     },
     data: {
       habitType: frequency === "DAILY" ? "DAILY" : "WEEKLY",

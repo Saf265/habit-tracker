@@ -115,7 +115,7 @@ export default function HabitsLayout({
             <p className="mb-4 text-sm">Série actuelle : {streak} jours</p>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
-                <BtnEdit id={id} />
+                <BtnEdit id={Number(id)} />
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="destructive">
