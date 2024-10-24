@@ -51,7 +51,7 @@ export default async function UpdateHabitFormPage({
           </CardHeader>
           <CardContent>
             <UpdateHabitForm
-              id={Number(searchParams.id)}
+              id={Number(habitData?.id)}
               name={habitData?.name}
               description={habitData?.description ?? ""}
               reminder={habitData?.reminder}

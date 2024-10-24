@@ -21,7 +21,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { deleteHabit } from "@/lib/actionHabit";
-import { ChevronDown, ChevronUp, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Edit, Trash2 } from "lucide-react";
+import Link from "next/link";
 import * as React from "react";
 import BtnEdit from "./BtnEdit";
 import { successDelete } from "./ToastAsset";
@@ -116,6 +117,18 @@ export default function HabitsLayout({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
                 <BtnEdit id={Number(id)} />
+                <Link
+                  href={{
+                    pathname: `/habitActions/edit`,
+                    query: {
+                      id: id,
+                    },
+                  }}
+                >
+                  <Button variant="outline" size="sm" className="mr-2">
+                    <Edit className="mr-1 size-4" /> Edit 2, id: {Number(id)}
+                  </Button>
+                </Link>
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="destructive">

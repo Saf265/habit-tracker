@@ -67,9 +67,16 @@ export const CreateHabit = async (formData: FormData) => {
 };
 
 export const getHabitDataById = async (id: number) => {
+  if (typeof id !== "number") {
+    console.error("Error mais type");
+  }
+
+  if (!id) {
+    console.error("L'id n'est pas la");
+  }
   const habit = await prisma.habit.findUnique({
     where: {
-      id: id,
+      id: Number(id),
     },
   });
 
