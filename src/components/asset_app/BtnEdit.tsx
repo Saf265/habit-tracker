@@ -10,7 +10,7 @@ type EditProps = {
 
 export default function BtnEdit({ id }: EditProps) {
   return (
-    <form>
+    <div>
       <Link
         href={{
           pathname: `/habitActions/edit/${id}`,
@@ -20,10 +20,10 @@ export default function BtnEdit({ id }: EditProps) {
         }}
       >
         <Button variant="outline" size="sm" className="mr-2">
-          <Edit className="mr-1 size-4" /> Edit
+          <Edit className="mr-1 size-4" /> Edit, id: {id}
         </Button>
       </Link>
       <input type="hidden" value={id} />
-    </form>
+    </div>
   );
 }

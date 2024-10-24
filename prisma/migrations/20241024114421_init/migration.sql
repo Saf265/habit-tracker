@@ -49,4 +49,4 @@ CREATE UNIQUE INDEX "User_clerkUserId_key" ON "User"("clerkUserId");
 ALTER TABLE "Habit" ADD CONSTRAINT "Habit_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "HistoryHabit" ADD CONSTRAINT "HistoryHabit_id_fkey" FOREIGN KEY ("id") REFERENCES "Habit"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "HistoryHabit" ADD CONSTRAINT "HistoryHabit_habitId_fkey" FOREIGN KEY ("habitId") REFERENCES "Habit"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

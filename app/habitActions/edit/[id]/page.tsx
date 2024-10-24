@@ -38,7 +38,7 @@ export default async function UpdateHabitFormPage({
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="/habitActions/add">Add</BreadcrumbLink>
+              <BreadcrumbLink href="/habitActions/edit">Edit</BreadcrumbLink>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
