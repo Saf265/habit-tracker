@@ -122,7 +122,6 @@ export const updateHabit = async (formData: FormData) => {
 export const deleteHabit = async (formData: FormData) => {
   const id = formData.get("id");
   const valueName = formData.get("valueName");
-  const userId = formData.get("userId") as string;
 
   console.log(id);
   console.log(valueName);
@@ -133,14 +132,12 @@ export const deleteHabit = async (formData: FormData) => {
     await prisma.habit.delete({
       where: {
         id: Number(id),
-        userId: userId,
       },
     });
 
     await prisma.historyHabit.deleteMany({
       where: {
         habitId: Number(id),
-        userId: userId,
       },
     });
   } else {
