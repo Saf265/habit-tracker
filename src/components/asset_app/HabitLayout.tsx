@@ -20,10 +20,11 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { deleteHabit } from "@/lib/actionHabit";
+import { calculateStreak, deleteHabit, handleUpdateHabit } from "@/lib/actionHabit";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { ChevronDown, ChevronUp, Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
-import * as React from "react";
+import { useState, useEffect } from "react";
 import { successDelete } from "./ToastAsset";
 
 type HabitProps = {
@@ -34,6 +35,7 @@ type HabitProps = {
   streak: number;
   completed: boolean;
   lastCompleted: string | null;
+  userId: string; // Assurez-vous que userId est passé en tant que prop
 };
 
 export default function HabitsLayout({
@@ -44,35 +46,40 @@ export default function HabitsLayout({
   streak,
   completed,
   lastCompleted,
+  userId,
 }: HabitProps) {
-  const [expandedHabit, setExpandedHabit] = React.useState<number | null>(null);
-  const [isCompleted, setCompleted] = React.useState(completed);
+  const [expandedHabit, setExpandedHabit] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [isCompleted, setCompleted] = useState(completed ? true : false);
+  const [currentStreak, setCurrentStreak] = useState(streak); // État pour le streak
 
-  const handleCheckboxChange = async () => {
-    const newCompletedStatus = !isCompleted;
-    setCompleted(newCompletedStatus);
-
+  const handleCheckbox = async (checked: boolean, id: number) => {
     try {
-      const response = await fetch("/api/update-habit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id,
-          completed: newCompletedStatus,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update habit");
-      }
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour de l'habitude :", error);
-      // Revert state if update fails
-      setCompleted(!newCompletedStatus);
+      setLoading(true);
+      setCompleted(checked);
+      await handleUpdateHabit(Boolean(checked), id);
+    } catch (err) {
+      throw new Error(`error: ${err}`);
+    } finally {
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const fetchStreak = async () => {
+      setLoading(true); // Démarrer le chargement
+      try {
+        const calculatedStreak = await calculateStreak(id, userId); // Calculer le streak
+        setCurrentStreak(calculatedStreak); // Mettre à jour l'état avec le streak calculé
+      } catch (error) {
+        console.error("Erreur lors du calcul du streak:", error);
+      } finally {
+        setLoading(false); // Arrêter le chargement
+      }
+    };
+
+    fetchStreak();
+  }, [id, userId]); // Dépendances pour re-calculer le streak si l'ID de l'habitude ou l'utilisateur change
 
   return (
     <Collapsible
@@ -85,10 +92,16 @@ export default function HabitsLayout({
         <CardHeader className="p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Checkbox
-                defaultChecked={completed}
-                onCheckedChange={handleCheckboxChange}
-              />
+              {loading ? (
+                <ReloadIcon className="mr-2 size-4 animate-spin" />
+              ) : (
+                <Checkbox
+                  defaultChecked={isCompleted}
+                  onCheckedChange={(checked) =>
+                    handleCheckbox(Boolean(checked), id)
+                  }
+                />
+              )}
               <h3
                 className={`text-xl ${
                   completed ? "text-muted-foreground line-through" : ""
@@ -111,8 +124,10 @@ export default function HabitsLayout({
         <CollapsibleContent>
           <CardContent className="p-4 pt-0">
             <p className="mb-2 text-sm text-muted-foreground">{description}</p>
-            <p className="mb-2 text-sm">Fréquence : {frequency}</p>
-            <p className="mb-4 text-sm">Série actuelle : {streak} jours</p>
+            <p className="mb-2 text-sm">Frequency : {frequency}</p>
+            <p className="mb-4 text-sm">
+              Current Streak : {loading ? "Chargement..." : `${currentStreak} jours`}
+            </p>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
                 <Link

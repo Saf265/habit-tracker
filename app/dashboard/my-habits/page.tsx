@@ -49,6 +49,7 @@ export default async function HabitPage() {
               streak={item?.streak ?? 0}
               lastCompleted=""
               frequency={item?.frequency ?? ""}
+              userId={item?.userId}
             />
           ))}
         </div>
@@ -70,6 +71,7 @@ export default async function HabitPage() {
               streak={item?.streak ?? 0}
               lastCompleted=""
               frequency={item?.frequency ?? ""}
+              userId={item?.userId}
             />
           ))}
         </div>

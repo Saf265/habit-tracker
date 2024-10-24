@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getUser } from "./actionUser";
 import { prisma } from "./db";
@@ -124,30 +125,84 @@ export const updateHabit = async (formData: FormData) => {
 };
 
 export const deleteHabit = async (formData: FormData) => {
-  const id = formData.get("id");
-  const valueName = formData.get("valueName");
+  try {
+    const id = formData.get("id");
+    const valueName = formData.get("valueName");
 
-  if (!id || isNaN(Number(id))) {
-    throw new Error("Invalid or missing habit ID.");
+    if (!id || isNaN(Number(id))) {
+      throw new Error("Invalid or missing habit ID.");
+    }
+
+    if (!valueName || typeof valueName !== "string") {
+      throw new Error("Invalid or missing habit name.");
+    }
+
+    const habitData = await getHabitDataById(Number(id));
+
+    if (habitData?.name === valueName) {
+      console.log("ok");
+      // Supprimer l'habitude et son historique dans une transaction
+      await prisma.$transaction([
+        prisma.historyHabit.deleteMany({
+          where: { habitId: Number(id) },
+        }),
+        prisma.habit.deleteMany({
+          where: { id: Number(id) },
+        }),
+      ]);
+    } else {
+      throw new Error("Habit not found or name does not match.");
+    }
+  } catch (err) {
+    throw new Error(`Retry please, error: ${err}`);
+  } finally {
+    revalidatePath("/");
+  }
+};
+
+export const handleUpdateHabit = async (completed: boolean, id: number) => {
+  try {
+    console.log("djzi");
+    // const newCompletedStatus = !completed;
+    console.log(id);
+    // console.log(newCompletedStatus);
+
+    await prisma.habit.update({
+      where: { id },
+      data: { completed: completed },
+    });
+    console.log("done");
+  } catch (err) {
+    throw new Error("error: " + err);
+  } finally {
+    revalidatePath("/");
+  }
+};
+
+export const calculateStreak = async (
+  habitId: number,
+  userId: string
+): Promise<number> => {
+  const history = await prisma.historyHabit.findMany({
+    where: {
+      habitId: habitId,
+      userId: userId,
+    },
+    orderBy: {
+      date: "desc", // Trier par ordre décroissant, de la plus récente à la plus ancienne
+    },
+  });
+
+  let streak = 0;
+
+  // Parcours les entrées dans l'ordre décroissant (plus récente d'abord)
+  for (const entry of history) {
+    if (entry.completed) {
+      streak++; // Incrémenter le streak si l'entrée est complétée
+    } else {
+      break; // Arrêter dès qu'une entrée non complétée est rencontrée
+    }
   }
 
-  if (!valueName || typeof valueName !== "string") {
-    throw new Error("Invalid or missing habit name.");
-  }
-
-  const habitData = await getHabitDataById(Number(id));
-
-  if (habitData?.name === valueName) {
-    // Supprimer l'habitude et son historique dans une transaction
-    await prisma.$transaction([
-      prisma.habit.delete({
-        where: { id: Number(id) },
-      }),
-      prisma.historyHabit.deleteMany({
-        where: { habitId: Number(id) },
-      }),
-    ]);
-  } else {
-    throw new Error("Habit not found or name does not match.");
-  }
+  return streak;
 };
