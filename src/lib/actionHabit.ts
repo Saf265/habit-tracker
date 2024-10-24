@@ -76,7 +76,7 @@ export const getHabitDataById = async (id: number) => {
   }
   const habit = await prisma.habit.findUnique({
     where: {
-      id: Number(id),
+      id: id,
     },
   });
 

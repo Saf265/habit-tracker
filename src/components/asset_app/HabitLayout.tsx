@@ -24,7 +24,6 @@ import { deleteHabit } from "@/lib/actionHabit";
 import { ChevronDown, ChevronUp, Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
-import BtnEdit from "./BtnEdit";
 import { successDelete } from "./ToastAsset";
 
 type HabitProps = {
@@ -116,7 +115,6 @@ export default function HabitsLayout({
             <p className="mb-4 text-sm">Série actuelle : {streak} jours</p>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
-                <BtnEdit id={Number(id)} />
                 <Link
                   href={{
                     pathname: `/habitActions/edit`,
