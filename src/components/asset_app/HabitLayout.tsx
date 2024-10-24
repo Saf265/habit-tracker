@@ -21,6 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { deleteHabit } from "@/lib/actionHabit";
+import { auth } from "@clerk/nextjs/server";
 import { ChevronDown, ChevronUp, Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
@@ -47,6 +48,8 @@ export default function HabitsLayout({
 }: HabitProps) {
   const [expandedHabit, setExpandedHabit] = React.useState<number | null>(null);
   const [isCompleted, setCompleted] = React.useState(completed);
+
+  const { userId } = auth();
 
   const handleCheckboxChange = async () => {
     const newCompletedStatus = !isCompleted;
@@ -146,6 +149,11 @@ export default function HabitsLayout({
                       }}
                       className="flex flex-col space-y-5"
                     >
+                      <input
+                        type="hidden"
+                        name="userId"
+                        value={String(userId)}
+                      />
                       <input type="hidden" name="id" value={id} />
                       <div className="flex flex-col items-start gap-1.5">
                         <Label htmlFor="valueName" className="text-right">
